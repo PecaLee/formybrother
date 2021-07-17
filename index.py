@@ -37,7 +37,7 @@ def get_works_data():
     anishkapoorWorks = []
     # count값과 데이터리스트를 만들어 준비
 
-    for url in works_list:
+    for url in works_list[0:49]:
         # 만든 워크리스트를 배열 0번부터 49번까지만 돌린다.
         work = requests.get(url)
         soup = BeautifulSoup(work.text, "html.parser")
