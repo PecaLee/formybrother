@@ -1,6 +1,7 @@
 from os import replace
 from time import sleep
 import urllib.request
+import csv
 
 import requests
 from bs4 import BeautifulSoup
@@ -37,7 +38,7 @@ def get_works_data():
     anishkapoorWorks = []
     # count값과 데이터리스트를 만들어 준비
 
-    for url in works_list[0:49]:
+    for url in works_list:
         # 만든 워크리스트를 배열 0번부터 49번까지만 돌린다.
         work = requests.get(url)
         soup = BeautifulSoup(work.text, "html.parser")
@@ -83,13 +84,15 @@ def get_works_data():
             size = "None"
 
         workDic = {"title": title, "year": year,
-                   "imgNum": imgNum, "material": material, "size": size}
+                   "imgNum": imgNum, "material": material, "size": size, "link": url}
         # 각각의 필요한 정보를 딕셔너리 타입에 정리
 
         anishkapoorWorks.append(workDic)
         # 만든 딕셔너리 타입의 데이터를 리스트에 저장
 
-        print(count)
+        if count % 10 == 0:
+            print(f"{count}번째 데이터까지 성공적으로 크롤링 했습니다.")
+
         count = count + 1
         # 카운팅 숫자 올리기
         sleep(1)
@@ -99,4 +102,13 @@ def get_works_data():
     # 정보 리턴
 
 
-print(get_works_data())
+anishkapoorWorks = get_works_data()
+
+file = open("list_for_graduate.csv", mode="w", encoding="utf-8")
+writer = csv.writer(file)
+writer.writerow(["title", "year", "img file name", "material", "size", "URL"])
+
+for work in anishkapoorWorks:
+    writer.writerow(list(work.values()))
+
+print("축하합니다.\n졸업논문을 위한 리스팅작업이 끝났습니다.")
